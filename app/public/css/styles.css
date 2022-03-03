@@ -330,5 +330,16 @@ input[type=range]:active::-ms-thumb {
     left: 2em;
   }
 }
+@media screen and (max-width: 620px) {
+  input[type=range] {
+    width: 30%;
+  }
+
+  .logo {
+    position: inherit;
+    margin-bottom: 2em;
+    width: 70%;
+  }
+}
 
 /*# sourceMappingURL=styles.css.map */
