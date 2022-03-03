@@ -1,4 +1,4 @@
-
+/** Implementation of the presentation of the pads and buttons */
 var playPauseButton = document.getElementById('play-pause');
 var stopButton = document.getElementById('stop');
 var repeatButton = document.getElementById('repeat');
@@ -8,6 +8,8 @@ var seekSliders = document.getElementsByClassName('seek-slider');
 var audios = document.querySelectorAll('audio');
 var durationContainers = document.getElementsByClassName('duration');
 var currentTimeContainers = document.getElementsByClassName('current-time');
+
+
 let raf = new Array(muteIconContainers.length).fill(null);
 let colors = new Array(muteIconContainers.length).fill("#A8B3B8");
 let playState = false;
@@ -24,14 +26,14 @@ const showRangeProgress = (rangeInput, i) => {
     else audioPlayerContainers[i].style.setProperty('--volume-before-width', rangeInput.value / rangeInput.max * 100 + '%');
 }
 
-const calculateTime = (secs) => {
+const calculateTime = (secs) => {                                               // calculate the time of pad
     const minutes = Math.floor(secs / 60);
     const seconds = Math.floor(secs % 60);
     const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
     return `${minutes}:${returnedSeconds}`;
 }
 
-stopButton.addEventListener('click', () => {
+stopButton.addEventListener('click', () => {                            // listener for clicking on stopButton
     requestAnimationFrame(whilePlaying);
     playPauseButton.childNodes[0].className = playPauseButton.childNodes[0].className.split(" ").slice(0,3).concat(["fa-play"]).join(" ")
     playState = false;
@@ -44,7 +46,7 @@ stopButton.addEventListener('click', () => {
     })
 });
 
-repeatButton.addEventListener('click', () => {
+repeatButton.addEventListener('click', () => {                      // listener for clicking on repeatButton
     if(repeatState) {
         repeatState = false;
         repeatButton.style.background = "transparent";
@@ -68,7 +70,7 @@ muteIconContainers.forEach(function (element, i) {
         outline: "none"
     });
 
-    element.addEventListener('click', () => {
+    element.addEventListener('click', () => {               // listener for clicking on mute in pad
         if(muteState[i] === 'unmute') {
             muteAnimation[i].playSegments([0, 15], true);
             audios[i].muted = true;
@@ -85,7 +87,7 @@ muteIconContainers.forEach(function (element, i) {
     });
 });
 
-seekSliders.forEach(function (element, i) {
+seekSliders.forEach(function (element, i) {             // updating the sliders
     element.addEventListener('input', (e) => {
         showRangeProgress(e.target, i);
     });
@@ -106,7 +108,7 @@ seekSliders.forEach(function (element, i) {
     });
 });
 
-playPauseButton.addEventListener('click', () => {
+playPauseButton.addEventListener('click', () => {                         // listener for clicking on play/pause
     if(!playState)
     {
         playState = true;
@@ -133,7 +135,7 @@ playPauseButton.addEventListener('click', () => {
     }
 });
 
-function updateRaf(i) {
+function updateRaf(i) {                             // Auxiliary function for update requestAnimationFrame when clicking mute
     if(playState)
     {
         if(muteState[i] === 'unmute') {
@@ -162,7 +164,7 @@ const displayBufferedAmount = (i) => {
     }
 }
 
-const whilePlaying = () => {
+const whilePlaying = () => {                                //          requestAnimationFrame function for update the sliders in the pads
     muteState.forEach(function (element, i) {
         if(playState && element === 'unmute') {
             seekSliders[i].value = Math.floor(audios[i].currentTime);
