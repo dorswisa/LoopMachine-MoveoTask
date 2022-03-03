@@ -25,7 +25,8 @@ dropped position)
 ***
 
 ## Installation:
-### Install Project
+
+* You can edit "loopersData.js" file - to add loopers or to change sound path, name and color.
 
 1. Install packages:
 
