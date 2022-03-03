@@ -1,0 +1,39 @@
+extends layout
+
+block content
+
+    style(src="css/styles.css")
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css')
+
+
+    header.codrops-header
+        .logo
+            a.moveo-logo-homepage.w-inline-block.w--current(href='/')
+                img.moveo-logo-img.homepage(src='https://assets-global.website-files.com/5d7e2671cad517cbaeca14fd/5d81df792a306e2e5b5f8adf_moveo-logo.svg' alt='Image with no description' style="width:150%")
+        h1
+            | Machine Loop
+            span By Dor Swisa
+
+
+    each looper in loopersData
+        .audio-player-container(style="color:" + looper.color)
+            audio(src=looper.src preload='metadata' loop='')
+            p=looper.name
+            button.mute-icon(style="padding: 2px; margin-top: 2px;")
+            span.current-time.time 0:00
+            input.seek-slider(type='range' max='100' value='0')
+            span.duration.time 0:00
+
+    .buttons-content
+        button.button.button--sacnite.button--round-s.button--inverted#play-pause
+            i.button__icon.icon.fas.fa-play
+        button.button.button--sacnite.button--round-s.button--inverted#stop
+            i.button__icon.icon.fas.fa-stop
+        button.button.button--sacnite.button--round-s.button--inverted#repeat(style="background: #37474f;")
+            i.button__icon.icon.fas.fa-repeat
+
+
+
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.8.1/lottie.min.js")
+    script(src='/js/home.js')
+
