@@ -338,7 +338,42 @@ input[type=range]:active::-ms-thumb {
   .logo {
     position: inherit;
     margin-bottom: 2em;
-    width: 70%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+@media screen and (max-width: 500px) {
+  header {
+    padding: 1em 0 0 0;
+  }
+
+  input[type=range] {
+    width: 15%;
+  }
+
+  .logo {
+    position: inherit;
+    margin-bottom: 2em;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  p {
+    width: fit-content;
+    font-size: 20px;
+  }
+
+  .audio-player-container {
+    max-width: 80%;
+  }
+
+  .time {
+    font-size: 18px;
+    margin: 9px;
   }
 }
 
