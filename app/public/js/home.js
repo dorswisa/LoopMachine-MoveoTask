@@ -111,12 +111,7 @@ playPauseButton.addEventListener('click', () => {                         // lis
         requestAnimationFrame(whilePlaying);
         playPauseButton.childNodes[0].className = playPauseButton.childNodes[0].className.split(" ").slice(0,3).concat(["fa-pause"]).join(" ")
         muteState.forEach(function (element, i) {
-            if(element === 'unmute') {
-                audios[i].play();
-            } else {
-                audios[i].pause();
-                cancelAnimationFrame(raf[i]);
-            }
+            audios[i].play();
         })
     }
     else
