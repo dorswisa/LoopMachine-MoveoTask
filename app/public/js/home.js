@@ -15,8 +15,6 @@ let colors = new Array(muteIconContainers.length).fill("#A8B3B8");
 let playState = false;
 let repeatState = true;
 
-console.log(audios);
-
 let muteState = new Array(muteIconContainers.length).fill("unmute");
 
 var muteAnimation = [];
@@ -83,7 +81,6 @@ muteIconContainers.forEach(function (element, i) {
             muteState[i] = 'unmute';
             audioPlayerContainers[i].style.color = colors[i];
         }
-        updateRaf(i);
     });
 });
 
@@ -102,7 +99,6 @@ seekSliders.forEach(function (element, i) {             // updating the sliders
     element.addEventListener('change', () => {
         audios[i].currentTime = element.value;
         if(!audios[i].paused) {
-            console.log("HERE2 " + i)
             requestAnimationFrame(whilePlaying);
         }
     });
@@ -135,18 +131,6 @@ playPauseButton.addEventListener('click', () => {                         // lis
     }
 });
 
-function updateRaf(i) {                             // Auxiliary function for update requestAnimationFrame when clicking mute
-    if(playState)
-    {
-        if(muteState[i] === 'unmute') {
-            audios[i].play();
-            raf[i] = requestAnimationFrame(whilePlaying);
-        } else {
-            audios[i].pause();
-            cancelAnimationFrame(raf[i]);
-        }
-    }
-}
 
 const displayDuration = (i) => {
     durationContainers[i].textContent = calculateTime(audios[i].duration);
@@ -166,11 +150,9 @@ const displayBufferedAmount = (i) => {
 
 const whilePlaying = () => {                                //          requestAnimationFrame function for update the sliders in the pads
     muteState.forEach(function (element, i) {
-        if(playState && element === 'unmute') {
-            seekSliders[i].value = Math.floor(audios[i].currentTime);
-            currentTimeContainers[i].textContent = calculateTime(seekSliders[i].value);
-            audioPlayerContainers[i].style.setProperty('--seek-before-width', `${seekSliders[i].value / seekSliders[i].max * 100}%`);
-        }
+        seekSliders[i].value = Math.floor(audios[i].currentTime);
+        currentTimeContainers[i].textContent = calculateTime(seekSliders[i].value);
+        audioPlayerContainers[i].style.setProperty('--seek-before-width', `${seekSliders[i].value / seekSliders[i].max * 100}%`);
     });
     requestAnimationFrame(whilePlaying);
 }
