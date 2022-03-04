@@ -97,7 +97,6 @@ playPauseButton.addEventListener('click', () => {                         // lis
         requestAnimationFrame(whilePlaying);
         playPauseButton.childNodes[0].className = playPauseButton.childNodes[0].className.split(" ").slice(0,3).concat(["fa-pause"]).join(" ")
         muteState.forEach(function (element, i) {
-            colors[i] = audioPlayerContainers[i].style.color;
             audios[i].play();
         })
     }
@@ -124,9 +123,8 @@ const setSliderMax = (i) => {
 
 
 const whilePlaying = () => {                                //          requestAnimationFrame function for update the sliders in the pads
-
+    seekSlider.value = Math.floor(audios[0].currentTime);
     muteState.forEach(function (element, i) {
-        seekSlider.value = Math.floor(audios[i].currentTime);
         currentTimeContainers[i].textContent = calculateTime(seekSlider.value);
         audioPlayerContainers[i].style.setProperty('--seek-before-width', `${seekSlider.value / seekSlider.max * 100}%`);
         if(muteState[i] == "mute")
@@ -142,6 +140,7 @@ const whilePlaying = () => {                                //          requestA
 }
 
 audios.forEach(function (element, i) {
+    colors[i] = audioPlayerContainers[i].style.color;
     if (element.readyState > 0) {
         displayDuration(i);
         setSliderMax(i);
