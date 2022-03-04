@@ -15,14 +15,14 @@ block content
             span By Dor Swisa
 
 
+    input.seek-slider(type='range' max='100' value='0' )
     each looper in loopersData
         .audio-player-container(style="color:" + looper.color)
             audio(src=looper.src preload='metadata' loop='')
             p=looper.name
             button.mute-icon(style="padding: 2px; margin-top: 2px;")
-            span.current-time.time 0:00
-            input.seek-slider(type='range' max='100' value='0')
-            span.duration.time 0:00
+            span.current-time.time(style="color: black; ") 0:00
+            span.duration.time(style="color:black; ") 0:00
 
     .buttons-content
         button.button.button--sacnite.button--round-s.button--inverted#play-pause

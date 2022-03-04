@@ -4,11 +4,13 @@ var stopButton = document.getElementById('stop');
 var repeatButton = document.getElementById('repeat');
 var audioPlayerContainers = document.getElementsByClassName('audio-player-container');
 var muteIconContainers = document.getElementsByClassName('mute-icon');
-var seekSliders = document.getElementsByClassName('seek-slider');
+var seekSlider = document.getElementsByClassName('seek-slider')[0];
 var audios = document.querySelectorAll('audio');
 var durationContainers = document.getElementsByClassName('duration');
 var currentTimeContainers = document.getElementsByClassName('current-time');
 
+
+console.log(audios);
 
 let raf = new Array(muteIconContainers.length).fill(null);
 let colors = new Array(muteIconContainers.length).fill("#A8B3B8");
@@ -18,11 +20,6 @@ let repeatState = true;
 let muteState = new Array(muteIconContainers.length).fill("unmute");
 
 var muteAnimation = [];
-
-const showRangeProgress = (rangeInput, i) => {
-    if(rangeInput === seekSliders[i]) audioPlayerContainers[i].style.setProperty('--seek-before-width', rangeInput.value / rangeInput.max * 100 + '%');
-    else audioPlayerContainers[i].style.setProperty('--volume-before-width', rangeInput.value / rangeInput.max * 100 + '%');
-}
 
 const calculateTime = (secs) => {                                               // calculate the time of pad
     const minutes = Math.floor(secs / 60);
@@ -38,7 +35,7 @@ stopButton.addEventListener('click', () => {                            // liste
     muteState.forEach(function (element, i) {
         audios[i].pause();
         audios[i].currentTime = 0;
-        seekSliders[i].value = 0;
+        seekSlider.value = 0;
         currentTimeContainers[i].textContent = calculateTime(0);
         audioPlayerContainers[i].style.setProperty('--seek-before-width', `${0}%`);
     })
@@ -73,7 +70,6 @@ muteIconContainers.forEach(function (element, i) {
             muteAnimation[i].playSegments([0, 15], true);
             audios[i].muted = true;
             muteState[i] = 'mute';
-            colors[i] = audioPlayerContainers[i].style.color;
             audioPlayerContainers[i].style.color = "#A8B3B8";
         } else {
             muteAnimation[i].playSegments([15, 25], true);
@@ -84,21 +80,11 @@ muteIconContainers.forEach(function (element, i) {
     });
 });
 
-seekSliders.forEach(function (element, i) {             // updating the sliders
-    element.addEventListener('input', (e) => {
-        showRangeProgress(e.target, i);
-    });
-
-    element.addEventListener('input', () => {
-        currentTimeContainers[i].textContent = calculateTime(element.value);
-        if(!audios[i].paused) {
-            cancelAnimationFrame(raf[i]);
-        }
-    });
-
-    element.addEventListener('change', () => {
-        audios[i].currentTime = element.value;
-        if(!audios[i].paused) {
+seekSlider.addEventListener('change', () => {
+    audios.forEach(function (ele, i) {
+        ele.currentTime = seekSlider.value;
+        currentTimeContainers[i].textContent = calculateTime(seekSlider.value);
+        if (!audios[i].paused) {
             requestAnimationFrame(whilePlaying);
         }
     });
@@ -111,6 +97,7 @@ playPauseButton.addEventListener('click', () => {                         // lis
         requestAnimationFrame(whilePlaying);
         playPauseButton.childNodes[0].className = playPauseButton.childNodes[0].className.split(" ").slice(0,3).concat(["fa-pause"]).join(" ")
         muteState.forEach(function (element, i) {
+            colors[i] = audioPlayerContainers[i].style.color;
             audios[i].play();
         })
     }
@@ -132,22 +119,24 @@ const displayDuration = (i) => {
 }
 
 const setSliderMax = (i) => {
-    seekSliders[i].max = Math.floor(audios[i].duration);
+    seekSlider.max = Math.floor(audios[i].duration);
 }
 
-const displayBufferedAmount = (i) => {
-    if(audios[i].buffered > 0)
-    {
-        const bufferedAmount = Math.floor(audios[i].buffered.end(audios[i].buffered.length - 1));
-        audioPlayerContainers[i].style.setProperty('--buffered-width', `${(bufferedAmount / seekSliders[i].max) * 100}%`);
-    }
-}
 
 const whilePlaying = () => {                                //          requestAnimationFrame function for update the sliders in the pads
+
     muteState.forEach(function (element, i) {
-        seekSliders[i].value = Math.floor(audios[i].currentTime);
-        currentTimeContainers[i].textContent = calculateTime(seekSliders[i].value);
-        audioPlayerContainers[i].style.setProperty('--seek-before-width', `${seekSliders[i].value / seekSliders[i].max * 100}%`);
+        seekSlider.value = Math.floor(audios[i].currentTime);
+        currentTimeContainers[i].textContent = calculateTime(seekSlider.value);
+        audioPlayerContainers[i].style.setProperty('--seek-before-width', `${seekSlider.value / seekSlider.max * 100}%`);
+        if(muteState[i] == "mute")
+        {
+            audioPlayerContainers[i].style.background = "linear-gradient(to right, #A8B3B8" + " 0%, #A8B3B8" +" "+ seekSlider.value / seekSlider.max * 100+"%, #ECEFF1 " + seekSlider.value / seekSlider.max * 100+"%, #ECEFF1 100%)"
+        }
+        else
+        {
+            audioPlayerContainers[i].style.background = "linear-gradient(to right," + colors[i] + " 0%," + colors[i] +""+ seekSlider.value / seekSlider.max * 100+"%, #ECEFF1 " + seekSlider.value / seekSlider.max * 100+"%, #ECEFF1 100%)"
+        }
     });
     requestAnimationFrame(whilePlaying);
 }
@@ -156,16 +145,10 @@ audios.forEach(function (element, i) {
     if (element.readyState > 0) {
         displayDuration(i);
         setSliderMax(i);
-        displayBufferedAmount(i);
     } else {
         element.addEventListener('loadedmetadata', () => {
             displayDuration(i);
             setSliderMax(i);
-            displayBufferedAmount(i);
         });
     }
-
-    element.addEventListener('progress',() =>{
-        displayBufferedAmount(i);
-    });
 });
