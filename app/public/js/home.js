@@ -28,6 +28,15 @@ const calculateTime = (secs) => {                                               
     return `${minutes}:${returnedSeconds}`;
 }
 
+seekSlider.addEventListener('input', () => {
+    cancelAnimationFrame(raf[0]);
+    audios.forEach(function (ele, i) {
+        ele.currentTime = seekSlider.value;
+        currentTimeContainers[i].textContent = calculateTime(seekSlider.value);
+        requestAnimationFrame(whilePlaying);
+    });
+});
+
 stopButton.addEventListener('click', () => {                            // listener for clicking on stopButton
     requestAnimationFrame(whilePlaying);
     playPauseButton.childNodes[0].className = playPauseButton.childNodes[0].className.split(" ").slice(0,3).concat(["fa-play"]).join(" ")
@@ -77,14 +86,6 @@ muteIconContainers.forEach(function (element, i) {
             muteState[i] = 'unmute';
             audioPlayerContainers[i].style.color = colors[i];
         }
-    });
-});
-
-seekSlider.addEventListener('change', () => {
-    audios.forEach(function (ele, i) {
-        ele.currentTime = seekSlider.value;
-        currentTimeContainers[i].textContent = calculateTime(seekSlider.value);
-        requestAnimationFrame(whilePlaying);
     });
 });
 
