@@ -84,9 +84,7 @@ seekSlider.addEventListener('change', () => {
     audios.forEach(function (ele, i) {
         ele.currentTime = seekSlider.value;
         currentTimeContainers[i].textContent = calculateTime(seekSlider.value);
-        if (!audios[i].paused) {
-            requestAnimationFrame(whilePlaying);
-        }
+        requestAnimationFrame(whilePlaying);
     });
 });
 

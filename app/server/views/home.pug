@@ -15,7 +15,7 @@ block content
             span By Dor Swisa
 
 
-    input.seek-slider(type='range' max='100' value='0' )
+    input.seek-slider(type='range' max='100' value='0' min='0' step='any')
     each looper in loopersData
         .audio-player-container(style="color:" + looper.color)
             audio(src=looper.src preload='metadata' loop='')
